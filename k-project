@@ -1,0 +1,110 @@
+using UnityEngine;
+using System.Collections.Generic;
+
+public class DungeonGenerator : MonoBehaviour
+{
+    public int roomCount = 5;
+    public Vector2 roomSize = new Vector2(5, 5);
+    public GameObject roomPrefab;
+
+    private List<Vector2> roomPositions = new List<Vector2>();
+
+    void Start()
+    {
+        GenerateDungeon();
+    }
+
+    void GenerateDungeon()
+    {
+        Vector2 currentPosition = Vector2.zero;
+        for (int i = 0; i < roomCount; i++)
+        {
+            roomPositions.Add(currentPosition);
+            Instantiate(roomPrefab, currentPosition, Quaternion.identity);
+            currentPosition += RandomDirection() * roomSize;
+        }
+    }
+
+    Vector2 RandomDirection()
+    {
+        int direction = Random.Range(0, 4);
+        switch (direction)
+        {
+            case 0: return Vector2.up;
+            case 1: return Vector2.down;
+            case 2: return Vector2.left;
+            case 3: return Vector2.right;
+        }
+        return Vector2.zero;
+    }
+}
+using UnityEngine;
+
+public class InteractiveObject : MonoBehaviour
+{
+    public enum ObjectType { Door, Lever, Treasure }
+    public ObjectType objectType;
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Interact();
+        }
+    }
+
+    void Interact()
+    {
+        switch (objectType)
+        {
+            case ObjectType.Door:
+                Debug.Log("Door opened!");
+                break;
+            case ObjectType.Lever:
+                Debug.Log("Lever pulled!");
+                break;
+            case ObjectType.Treasure:
+                Debug.Log("Treasure found!");
+                break;
+        }
+    }
+}
+using UnityEngine;
+
+public class PlayerCombat : MonoBehaviour
+{
+    public int attackDamage = 10;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Attack();
+        }
+    }
+
+    void Attack()
+    {
+        // Assuming an enemy is within attack range
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right, 1f);
+        if (hit.collider != null && hit.collider.CompareTag("Enemy"))
+        {
+            hit.collider.GetComponent<Enemy>().TakeDamage(attackDamage);
+        }
+    }
+}
+using UnityEngine;
+
+public class Enemy : MonoBehaviour
+{
+    public int health = 20;
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+}
