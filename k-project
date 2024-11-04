@@ -1,3 +1,4 @@
+//DungeonGenerator.cs
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -38,6 +39,7 @@ public class DungeonGenerator : MonoBehaviour
         return Vector2.zero;
     }
 }
+//InteractiveObject.cs
 using UnityEngine;
 
 public class InteractiveObject : MonoBehaviour
@@ -69,6 +71,7 @@ public class InteractiveObject : MonoBehaviour
         }
     }
 }
+//PlayerCombat.cs
 using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
@@ -93,6 +96,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 }
+//Enemy.cs
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
